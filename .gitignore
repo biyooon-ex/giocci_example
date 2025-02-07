@@ -24,3 +24,8 @@ giocci_example-*.tar
 
 # Temporary files, for example, from tests.
 /tmp/
+
+# Sample file for Giocci configuration in your application
+# Note that this file is usually gitignored to keep your servers
+# information secret. This is just an example show, so we did not do so.
+#.env
