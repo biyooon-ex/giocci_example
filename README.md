@@ -38,7 +38,7 @@ Giocci.save_module("giocci_relay", GiocciExample)
 # => :ok
 Giocci.exec_func("giocci_relay", {GiocciExample, :hello, []})
 # => :world
-iex(18)> Giocci.exec_func("giocci_relay", {GiocciExample, :hello, ["Kazuma"]})
+Giocci.exec_func("giocci_relay", {GiocciExample, :hello, ["Kazuma"]})
 # => "Hello, Kazuma!!"
 ```
 
