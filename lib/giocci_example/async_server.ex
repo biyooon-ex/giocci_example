@@ -15,7 +15,7 @@ defmodule GiocciExample.AsyncServer do
   end
 
   def handle_cast({:exec_func_async, relay, {module, func, args}}, state) do
-    Giocci.exec_func_async(relay, {module, func, args}, self())
+    :ok = Giocci.exec_func_async(relay, {module, func, args}, self())
     {:noreply, state}
   end
 
