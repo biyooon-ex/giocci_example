@@ -3,7 +3,7 @@
 The example code and its instruction for [Giocci Platform](https://github.com/biyooon-ex/giocci_platform).
 
 This explanation assumes that the GiocciRelay and GiocciEngine environment with your Zenoh router described in [Giocci's Quick Start](https://github.com/biyooon-ex/giocci_platform#quick-start) has already been deployed.
-Also, please specify the Endpoint of your Zenoh router as `connect.endpoints` in zenoh_config.json5.
+Also, please specify the Endpoint(s) of your Zenoh router by setting the environment variable `ZENOHD_CONNECT_ENDPOINTS` or editting `connect.endpoints` section in zenoh_config.json5.
 
 1. Deploy Zenoh router: `zenohd`
 2. Deploy Giocci Relay: `docker compose up giocci_relay`
