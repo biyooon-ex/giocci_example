@@ -70,7 +70,6 @@ Giocci.exec_func("giocci_relay", {GiocciExample.BasicCalc, :multiply, [3, 4]})
 Giocci.exec_func("giocci_relay", {GiocciExample.BasicCalc, :power, [3, 4]})
 # 81.0
 Giocci.exec_func("giocci_relay", {GiocciExample.BasicCalc, :fib, [34]})
-GiocciExample.BasicCalc.power(3, 4)
 # 5702887
 ```
 
