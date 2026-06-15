@@ -17,6 +17,6 @@ defmodule GiocciExample do
   end
 
   def hello(name) do
-    IO.inspect("Hello, #{name}!!")
+    "Hello, #{name}!!"
   end
 end

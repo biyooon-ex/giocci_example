@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      MIX_ENV: test
+      ZENOHD_CONNECT_ENDPOINTS: ${{ vars.ZENOHD_CONNECT_ENDPOINTS || secrets.ZENOHD_CONNECT_ENDPOINTS }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Erlang and Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          otp-version: '28.3'
+          elixir-version: '1.19.5'
+
+      - name: Validate Zenoh endpoint configuration
+        run: |
+          if [ -z "$ZENOHD_CONNECT_ENDPOINTS" ]; then
+            echo "ZENOHD_CONNECT_ENDPOINTS is not configured for this workflow run."
+            echo "If you configured it as an Actions repository secret, confirm the name is exactly ZENOHD_CONNECT_ENDPOINTS."
+            echo "If you configured it as an environment secret, this job also needs an environment: setting before it can read that secret."
+            echo "Repository secrets are not exposed to pull_request workflows from forks or Dependabot."
+            exit 1
+          fi
+
+      - name: Install Hex and Rebar
+        run: |
+          mix local.hex --force
+          mix local.rebar --force
+
+      - name: Fetch dependencies
+        run: mix deps.get
+
+      - name: Run tests
+        run: mix test

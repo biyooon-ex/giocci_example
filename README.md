@@ -146,3 +146,13 @@ GiocciExample.AsyncServer.exec_func_async("giocci_relay", {GiocciExample, :hello
 # Received result: [102334155, 102334155, 102334155, 102334155, 102334155, 102334155, 102334155, 102334155, 102334155, 102334155, 102334155, 102334155, 102334155, 102334155, 102334155, 102334155]
 ## Note that the order of received results was reversed!
 ```
+
+## Testing
+
+The test suite verifies that local execution results match remote Giocci execution for random inputs, including asynchronous execution. Since the `giocci` application establishes a Zenoh session at startup, the infrastructure described above must be running before executing any tests.
+
+```bash
+ZENOHD_CONNECT_ENDPOINTS="tcp/your-router-host:7447" mix test
+```
+
+For GitHub Actions, set `ZENOHD_CONNECT_ENDPOINTS` as a repository variable or secret so the CI workflow can use it.
