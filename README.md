@@ -154,3 +154,5 @@ The test suite verifies that local execution results match remote Giocci executi
 ```bash
 ZENOHD_CONNECT_ENDPOINTS="tcp/your-router-host:7447" mix test
 ```
+
+For GitHub Actions, set `ZENOHD_CONNECT_ENDPOINTS` as a repository variable or secret so the CI workflow can use it.
