@@ -2,8 +2,6 @@ name: CI
 
 on:
   push:
-    branches:
-      - main
   pull_request:
 
 permissions:
@@ -30,7 +28,10 @@ jobs:
       - name: Validate Zenoh endpoint configuration
         run: |
           if [ -z "$ZENOHD_CONNECT_ENDPOINTS" ]; then
-            echo "ZENOHD_CONNECT_ENDPOINTS is not configured. Set it as a repository or environment variable, or as a secret."
+            echo "ZENOHD_CONNECT_ENDPOINTS is not configured for this workflow run."
+            echo "If you configured it as an Actions repository secret, confirm the name is exactly ZENOHD_CONNECT_ENDPOINTS."
+            echo "If you configured it as an environment secret, this job also needs an environment: setting before it can read that secret."
+            echo "Repository secrets are not exposed to pull_request workflows from forks or Dependabot."
             exit 1
           fi
 
