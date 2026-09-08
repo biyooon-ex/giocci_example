@@ -4,7 +4,7 @@ defmodule GiocciExample.MixProject do
   def project do
     [
       app: :giocci_example,
-      version: "0.6.0",
+      version: "0.6.1",
       elixir: "~> 1.17",
       start_permanent: Mix.env() == :prod,
       deps: deps()
@@ -21,7 +21,7 @@ defmodule GiocciExample.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:giocci, "~> 0.6.0"}
+      {:giocci, "~> 0.6.1"}
       # {:giocci, path: "../giocci_platform/apps/giocci"}
     ]
   end
