@@ -76,6 +76,21 @@ defmodule GiocciExample.IntegrationTest do
     end
   end
 
+  describe "client unregistration" do
+    test "blocks execution without clearing saved modules" do
+      on_exit(fn -> :ok = Giocci.register_client(@relay) end)
+
+      assert :ok = Giocci.unregister_client(@relay)
+      assert :ok = Giocci.unregister_client(@relay)
+
+      assert {:ok, modules} = Giocci.Inspect.list_modules(@relay)
+      assert Atom.to_string(GiocciExample.BasicCalc) in modules
+
+      assert {:error, "relay_not_registered"} =
+               Giocci.exec_func(@relay, {GiocciExample.BasicCalc, :add, [3, 4]})
+    end
+  end
+
   describe "dynamic modules" do
     test "saves and executes a module compiled without a BEAM file" do
       module = GiocciExample.ModuleExamples.compile_dynamic_calc()

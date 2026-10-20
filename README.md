@@ -183,9 +183,26 @@ Atom.to_string(GiocciExample.BasicCalc) in inspection.modules
 # true
 ```
 
+### Unregister a Client
+
+Unregister a client when it should no longer submit requests to a relay:
+
+```elixir
+Giocci.register_client("giocci_relay")
+# :ok
+Giocci.save_module("giocci_relay", GiocciExample.BasicCalc)
+# :ok
+Giocci.unregister_client("giocci_relay")
+# :ok
+Giocci.exec_func("giocci_relay", {GiocciExample.BasicCalc, :add, [3, 4]})
+# {:error, "relay_not_registered"}
+```
+
+Unregistration is safe to repeat, but it affects all clients using the same client name. It does not delete modules saved in relay memory or unload code from Engines, so it must not be treated as cleanup or access isolation. Relay memory does not survive a restart.
+
 ## Testing
 
-The test suite verifies that local execution results match remote Giocci execution for random inputs, including asynchronous execution. It also tests the saved-module inspection and dynamic-compilation examples above. Since the `giocci` application establishes a Zenoh session at startup, the infrastructure described above must be running before executing any tests.
+The test suite verifies that local execution results match remote Giocci execution for random inputs, including asynchronous execution. It also tests client unregistration, saved-module inspection, and dynamic compilation. Since the `giocci` application establishes a Zenoh session at startup, the infrastructure described above must be running before executing any tests.
 
 ```bash
 ZENOHD_CONNECT_ENDPOINTS="tcp/your-router-host:7447" mix test
