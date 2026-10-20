@@ -2,6 +2,8 @@
 
 The example code and its instruction for [Giocci Platform](https://github.com/biyooon-ex/giocci_platform).
 
+GiocciExample releases follow Giocci's version numbers; use the matching GiocciPlatform release for GiocciRelay and GiocciEngine.
+
 This explanation assumes that the GiocciRelay and GiocciEngine environment with your Zenoh router described in [Giocci's Quick Start](https://github.com/biyooon-ex/giocci_platform#quick-start) has already been deployed.
 Also, please specify the Endpoint(s) of your Zenoh router by setting the environment variable `ZENOHD_CONNECT_ENDPOINTS` or editting `connect.endpoints` section in zenoh_config.json5.
 
@@ -147,9 +149,43 @@ GiocciExample.AsyncServer.exec_func_async("giocci_relay", {GiocciExample, :hello
 ## Note that the order of received results was reversed!
 ```
 
+### Dynamically Compiled Module
+
+[module_examples.ex](./lib/giocci_example/module_examples.ex) compiles `GiocciExample.DynamicCalc` at runtime using `Code.compile_string/1`. The module uses `Giocci.DynamicModule` to retain its BEAM so it can be saved without a BEAM file on disk.
+
+```elixir
+dynamic_calc = GiocciExample.ModuleExamples.compile_dynamic_calc()
+# GiocciExample.DynamicCalc
+dynamic_calc.add(7, 8)
+# 15
+Giocci.register_client("giocci_relay")
+# :ok
+Giocci.save_module("giocci_relay", dynamic_calc)
+# :ok
+Giocci.exec_func("giocci_relay", {dynamic_calc, :add, [7, 8]})
+# 15
+```
+
+### Inspect a Saved Module
+
+The example in [module_examples.ex](./lib/giocci_example/module_examples.ex) uses `Giocci.Inspect` to list modules saved at the relay and the public functions of `GiocciExample.BasicCalc`. Module and function names in the results are strings.
+
+```elixir
+Giocci.register_client("giocci_relay")
+# :ok
+Giocci.save_module("giocci_relay", GiocciExample.BasicCalc)
+# :ok
+{:ok, inspection} =
+  GiocciExample.ModuleExamples.inspect_saved_module("giocci_relay", GiocciExample.BasicCalc)
+Atom.to_string(GiocciExample.BasicCalc) in inspection.modules
+# true
+{"add", 2} in inspection.functions
+# true
+```
+
 ## Testing
 
-The test suite verifies that local execution results match remote Giocci execution for random inputs, including asynchronous execution. Since the `giocci` application establishes a Zenoh session at startup, the infrastructure described above must be running before executing any tests.
+The test suite verifies that local execution results match remote Giocci execution for random inputs, including asynchronous execution. It also tests the saved-module inspection and dynamic-compilation examples above. Since the `giocci` application establishes a Zenoh session at startup, the infrastructure described above must be running before executing any tests.
 
 ```bash
 ZENOHD_CONNECT_ENDPOINTS="tcp/your-router-host:7447" mix test

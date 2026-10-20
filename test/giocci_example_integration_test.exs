@@ -3,8 +3,9 @@ defmodule GiocciExample.IntegrationTest do
 
   @moduledoc """
   Tests that verify local execution results match remote Giocci execution
-  for random inputs. These tests require a running Zenoh router, GiocciRelay,
-  and GiocciEngine (see README for prerequisites).
+  and exercise module inspection and dynamic module saving. These tests
+  require a running Zenoh router, GiocciRelay, and GiocciEngine (see README
+  for prerequisites).
   """
 
   @relay "giocci_relay"
@@ -57,6 +58,33 @@ defmodule GiocciExample.IntegrationTest do
 
       assert Giocci.exec_func(@relay, {GiocciExample.BasicCalc, :fib, [n]}) ==
                GiocciExample.BasicCalc.fib(n)
+    end
+  end
+
+  describe "module inspection" do
+    test "lists the saved BasicCalc module and its public functions" do
+      module_name = Atom.to_string(GiocciExample.BasicCalc)
+
+      assert {:ok, %{modules: modules, functions: functions}} =
+               GiocciExample.ModuleExamples.inspect_saved_module(
+                 @relay,
+                 GiocciExample.BasicCalc
+               )
+
+      assert module_name in modules
+      assert {"add", 2} in functions
+    end
+  end
+
+  describe "dynamic modules" do
+    test "saves and executes a module compiled without a BEAM file" do
+      module = GiocciExample.ModuleExamples.compile_dynamic_calc()
+
+      assert :code.get_object_code(module) == :error
+      assert apply(module, :add, [7, 8]) == 15
+      :ok = Giocci.save_module(@relay, module)
+
+      assert Giocci.exec_func(@relay, {module, :add, [7, 8]}) == 15
     end
   end
 
