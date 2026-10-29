@@ -23,8 +23,8 @@ jobs:
       - name: Set up Erlang and Elixir
         uses: erlef/setup-beam@v1
         with:
-          otp-version: '28.5'
-          elixir-version: '1.19.5'
+          otp-version: '28.5.0.8'
+          elixir-version: '1.19.6'
 
       - name: Validate Zenoh endpoint configuration
         run: |
