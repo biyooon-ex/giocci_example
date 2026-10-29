@@ -21,7 +21,7 @@ defmodule GiocciExample.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:giocci, "~> 0.6.3"}
+      {:giocci, "~> 0.6.4"}
       # {:giocci, path: "../giocci_platform/apps/giocci"}
     ]
   end
